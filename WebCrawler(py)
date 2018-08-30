@@ -1,0 +1,33 @@
+import requests
+from bs4 import BeautifulSoup
+
+def trade_spider(max_pages):
+    page = 1
+    url = 'https://www.ebay.com/sch/i.html?_from=R40&_nkw=pendrive&_sacat=0&_ipg=50'#wrong url
+    source_code= requests.get(url)
+    plain_text = source_code.text
+    soup = BeautifulSoup(plain_text,"html.parser") #soup is an object of class BeautifulSoup
+    for link in soup.findAll('a',{'class':'s-item__link'}):
+        href = link.get('href')
+        title = link.string #just the text,not the url
+        print(href)
+        print(title)
+    print("******************************************END OF PAGE",page,"*************************************************************")
+    page += 1
+    while page <= max_pages:
+        #for ebay,extracting url's for all the pendrives
+        #'http://www.ebay.in/sch/i.html?_from=R40&_sacat=0&_nkw=pendrive&rt=nc'
+        url = 'https://www.ebay.com/sch/i.html?_from=R40&_nkw=pendrive&_sacat=0&_ipg=50' +'&_pgn='+str(page)
+        source_code= requests.get(url)
+        plain_text = source_code.text
+        soup = BeautifulSoup(plain_text,"html.parser") #soup is an object of class BeautifulSoup
+        for link in soup.findAll('a',{'class':'s-item__link'}):
+            href = link.get('href')
+            title = link.string #just the text,not the url
+            print(href)
+            print(title)
+        print("******************************************END OF PAGE",page,"*************************************************************")
+        page += 1
+
+x=int(input("Enter the page number upto which you want to see:"))
+trade_spider(x)
